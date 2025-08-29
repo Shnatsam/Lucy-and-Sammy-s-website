@@ -1,10 +1,258 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Hello World</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Octopies!</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Arial', sans-serif;
+            overflow-x: hidden;
+        }
+
+        .container {
+            text-align: center;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .octopus {
+            width: 200px;
+            height: 200px;
+            margin-bottom: 30px;
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        .octopus-body {
+            width: 120px;
+            height: 120px;
+            background: linear-gradient(45deg, #4a90e2, #357abd);
+            border-radius: 50%;
+            position: relative;
+            margin: 0 auto 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .eye {
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            position: absolute;
+            top: 35px;
+        }
+
+        .eye.left {
+            left: 30px;
+        }
+
+        .eye.right {
+            right: 30px;
+        }
+
+        .pupil {
+            width: 10px;
+            height: 10px;
+            background: black;
+            border-radius: 50%;
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            animation: look 4s ease-in-out infinite;
+        }
+
+        .tentacle {
+            width: 12px;
+            height: 60px;
+            background: linear-gradient(180deg, #4a90e2, #357abd);
+            border-radius: 6px;
+            position: absolute;
+            bottom: -40px;
+            transform-origin: top center;
+        }
+
+        .tentacle:nth-child(3) { left: 10px; animation: wave1 2s ease-in-out infinite; }
+        .tentacle:nth-child(4) { left: 30px; animation: wave2 2.2s ease-in-out infinite; }
+        .tentacle:nth-child(5) { right: 30px; animation: wave3 2.4s ease-in-out infinite; }
+        .tentacle:nth-child(6) { right: 10px; animation: wave4 2.6s ease-in-out infinite; }
+        .tentacle:nth-child(7) { left: 50px; animation: wave1 2.8s ease-in-out infinite; }
+        .tentacle:nth-child(8) { right: 50px; animation: wave2 3s ease-in-out infinite; }
+        .tentacle:nth-child(9) { left: 70px; animation: wave3 2.1s ease-in-out infinite; }
+        .tentacle:nth-child(10) { right: 70px; animation: wave4 2.3s ease-in-out infinite; }
+
+        .title {
+            font-size: 4rem;
+            font-weight: bold;
+            color: #fff;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.5);
+            margin-bottom: 20px;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: #b3d9ff;
+            margin-bottom: 30px;
+            opacity: 0.8;
+        }
+
+        .bubbles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: -1;
+        }
+
+        .bubble {
+            position: absolute;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+            animation: rise 6s linear infinite;
+        }
+
+        .bubble:nth-child(1) { left: 10%; width: 20px; height: 20px; animation-delay: 0s; }
+        .bubble:nth-child(2) { left: 20%; width: 15px; height: 15px; animation-delay: 1s; }
+        .bubble:nth-child(3) { left: 35%; width: 25px; height: 25px; animation-delay: 2s; }
+        .bubble:nth-child(4) { left: 50%; width: 18px; height: 18px; animation-delay: 3s; }
+        .bubble:nth-child(5) { left: 70%; width: 22px; height: 22px; animation-delay: 4s; }
+        .bubble:nth-child(6) { left: 85%; width: 16px; height: 16px; animation-delay: 5s; }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        @keyframes glow {
+            0% { text-shadow: 3px 3px 6px rgba(0,0,0,0.5), 0 0 20px rgba(74,144,226,0.3); }
+            100% { text-shadow: 3px 3px 6px rgba(0,0,0,0.5), 0 0 30px rgba(74,144,226,0.6); }
+        }
+
+        @keyframes wave1 {
+            0%, 100% { transform: rotate(-10deg); }
+            50% { transform: rotate(10deg); }
+        }
+
+        @keyframes wave2 {
+            0%, 100% { transform: rotate(10deg); }
+            50% { transform: rotate(-10deg); }
+        }
+
+        @keyframes wave3 {
+            0%, 100% { transform: rotate(-5deg); }
+            50% { transform: rotate(15deg); }
+        }
+
+        @keyframes wave4 {
+            0%, 100% { transform: rotate(15deg); }
+            50% { transform: rotate(-5deg); }
+        }
+
+        @keyframes look {
+            0%, 100% { transform: translate(0, 0); }
+            25% { transform: translate(2px, -2px); }
+            50% { transform: translate(-2px, 0); }
+            75% { transform: translate(0, 2px); }
+        }
+
+        @keyframes rise {
+            0% { 
+                bottom: -100px; 
+                opacity: 0;
+                transform: translateX(0);
+            }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { 
+                bottom: 100vh; 
+                opacity: 0;
+                transform: translateX(100px);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .title {
+                font-size: 3rem;
+            }
+            .octopus {
+                width: 150px;
+                height: 150px;
+            }
+            .octopus-body {
+                width: 90px;
+                height: 90px;
+            }
+        }
+    </style>
 </head>
 <body>
-    <h1>Hello World!</h1>
-    <p>This is our first website together.</p>
+    <div class="bubbles">
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+    </div>
+
+    <div class="container">
+        <div class="octopus">
+            <div class="octopus-body">
+                <div class="eye left">
+                    <div class="pupil"></div>
+                </div>
+                <div class="eye right">
+                    <div class="pupil"></div>
+                </div>
+                <div class="tentacle"></div>
+                <div class="tentacle"></div>
+                <div class="tentacle"></div>
+                <div class="tentacle"></div>
+                <div class="tentacle"></div>
+                <div class="tentacle"></div>
+                <div class="tentacle"></div>
+                <div class="tentacle"></div>
+            </div>
+        </div>
+        
+        <h1 class="title">Octopies!</h1>
+        <p class="subtitle">Swimming through the digital ocean</p>
+    </div>
+
+    <script>
+        // Add some interactive hover effects
+        document.querySelector('.octopus-body').addEventListener('mouseenter', function() {
+            this.style.transform = 'scale(1.2) rotate(5deg)';
+            this.style.transition = 'transform 0.3s ease';
+        });
+
+        document.querySelector('.octopus-body').addEventListener('mouseleave', function() {
+            this.style.transform = 'scale(1) rotate(0deg)';
+        });
+
+        // Make the title interactive
+        document.querySelector('.title').addEventListener('click', function() {
+            this.style.animation = 'none';
+            setTimeout(() => {
+                this.style.animation = 'glow 2s ease-in-out infinite alternate';
+            }, 100);
+        });
+    </script>
 </body>
 </html>
