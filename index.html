@@ -87,9 +87,46 @@
         .tentacle:nth-child(5) { right: 30px; animation: wave3 2.4s ease-in-out infinite; }
         .tentacle:nth-child(6) { right: 10px; animation: wave4 2.6s ease-in-out infinite; }
         .tentacle:nth-child(7) { left: 50px; animation: wave1 2.8s ease-in-out infinite; }
-        .tentacle:nth-child(8) { right: 50px; animation: wave2 3s ease-in-out infinite; }
+        .tentacle:nth-child(8) { right: 50px; animation: holdPie 3s ease-in-out infinite; }
         .tentacle:nth-child(9) { left: 70px; animation: wave3 2.1s ease-in-out infinite; }
         .tentacle:nth-child(10) { right: 70px; animation: wave4 2.3s ease-in-out infinite; }
+
+        .pie {
+            position: absolute;
+            bottom: -25px;
+            right: 45px;
+            width: 35px;
+            height: 35px;
+            z-index: 10;
+            animation: pieFloat 3s ease-in-out infinite;
+        }
+
+        .pie-base {
+            width: 35px;
+            height: 20px;
+            background: #8B4513;
+            border-radius: 0 0 17px 17px;
+            position: relative;
+        }
+
+        .pie-filling {
+            width: 30px;
+            height: 15px;
+            background: #FF6B35;
+            border-radius: 15px 15px 0 0;
+            position: absolute;
+            top: -10px;
+            left: 2.5px;
+        }
+
+        .pie-crust {
+            width: 35px;
+            height: 3px;
+            background: #654321;
+            border-radius: 2px;
+            position: absolute;
+            top: 5px;
+        }
 
         .title {
             font-size: 4rem;
@@ -159,9 +196,14 @@
             50% { transform: rotate(15deg); }
         }
 
-        @keyframes wave4 {
+        @keyframes holdPie {
             0%, 100% { transform: rotate(15deg); }
             50% { transform: rotate(-5deg); }
+        }
+
+        @keyframes pieFloat {
+            0%, 100% { transform: translateY(0px) rotate(-15deg); }
+            50% { transform: translateY(-5px) rotate(5deg); }
         }
 
         @keyframes look {
@@ -228,6 +270,11 @@
                 <div class="tentacle"></div>
                 <div class="tentacle"></div>
                 <div class="tentacle"></div>
+            </div>
+            <div class="pie">
+                <div class="pie-filling"></div>
+                <div class="pie-base"></div>
+                <div class="pie-crust"></div>
             </div>
         </div>
         
