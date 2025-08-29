@@ -1,2 +1,11 @@
 index.html
-hi sammy
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Hello World</title>
+</head>
+<body>
+    <h1>Hello World!</h1>
+    <p>This is our first website together.</p>
+</body>
+</html>
