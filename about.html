@@ -1,19 +1,316 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>About Us</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mouse Maze Game</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .game-container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            padding: 20px;
+            text-align: center;
+        }
+
+        .maze-container {
+            position: relative;
+            display: inline-block;
+            border: 3px solid #333;
+            background: #f0f0f0;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .maze {
+            width: 600px;
+            height: 400px;
+            position: relative;
+            background: #fff;
+            cursor: none;
+        }
+
+        .wall {
+            position: absolute;
+            background: #333;
+        }
+
+        .start {
+            position: absolute;
+            background: #4CAF50;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            left: 10px;
+            top: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 12px;
+        }
+
+        .goal {
+            position: absolute;
+            background: #ff4444;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            left: 280px;
+            top: 180px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 68, 68, 0.7); }
+            70% { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(255, 68, 68, 0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 68, 68, 0); }
+        }
+
+        .mouse-cursor {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background: #2196F3;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 10;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            transition: background 0.2s;
+        }
+
+        .status {
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .instructions {
+            margin-bottom: 20px;
+            color: #666;
+            max-width: 600px;
+            line-height: 1.4;
+        }
+
+        .win-message {
+            background: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            margin-top: 10px;
+            font-size: 20px;
+            display: none;
+            animation: celebrate 0.5s ease-out;
+        }
+
+        @keyframes celebrate {
+            0% { transform: scale(0.8); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .reset-message {
+            background: #ff4444;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            margin-top: 10px;
+            font-size: 16px;
+            display: none;
+        }
+    </style>
 </head>
 <body>
-    <h1>About Us</h1>
-    <p>We are two friends learning to build websites!</p>
-    
-    <h2>Who We Are</h2>
-    <p>[Add your names here]</p>
-    <p>[Write something about yourselves]</p>
-    
-    <h2>Why We're Building This</h2>
-    <p>We wanted to learn how to create websites and work together on coding projects.</p>
-    
-    <p><a href="index.html">← Back to Home</a> | <a href="projects.html">Our Projects →</a></p>
+    <div class="game-container">
+        <h1>🐭 Mouse Maze Challenge</h1>
+        <div class="instructions">
+            Move your mouse from the green START circle to the red GOAL in the center. 
+            Don't touch the black walls or you'll be reset to the beginning!
+        </div>
+        
+        <div class="maze-container">
+            <div class="maze" id="maze">
+                <!-- Start point -->
+                <div class="start">START</div>
+                
+                <!-- Goal point -->
+                <div class="goal">GOAL</div>
+                
+                <!-- Custom cursor -->
+                <div class="mouse-cursor" id="cursor"></div>
+                
+                <!-- Maze walls -->
+                <!-- Outer walls -->
+                <div class="wall" style="top: 0; left: 0; width: 100%; height: 20px;"></div>
+                <div class="wall" style="bottom: 0; left: 0; width: 100%; height: 20px;"></div>
+                <div class="wall" style="top: 0; left: 0; width: 20px; height: 100%;"></div>
+                <div class="wall" style="top: 0; right: 0; width: 20px; height: 100%;"></div>
+                
+                <!-- Opening for start -->
+                <div class="wall" style="top: 20px; left: 0; width: 20px; height: 20px;"></div>
+                <div class="wall" style="top: 80px; left: 0; width: 20px; height: 100%;"></div>
+                
+                <!-- Maze internal walls -->
+                <div class="wall" style="top: 60px; left: 60px; width: 100px; height: 20px;"></div>
+                <div class="wall" style="top: 20px; left: 140px; width: 20px; height: 100px;"></div>
+                <div class="wall" style="top: 100px; left: 200px; width: 80px; height: 20px;"></div>
+                <div class="wall" style="top: 140px; left: 80px; width: 20px; height: 80px;"></div>
+                <div class="wall" style="top: 140px; left: 100px; width: 60px; height: 20px;"></div>
+                <div class="wall" style="top: 200px; left: 140px; width: 20px; height: 60px;"></div>
+                <div class="wall" style="top: 240px; left: 20px; width: 140px; height: 20px;"></div>
+                <div class="wall" style="top: 180px; left: 200px; width: 20px; height: 40px;"></div>
+                <div class="wall" style="top: 200px; left: 220px; width: 40px; height: 20px;"></div>
+                
+                <!-- Right side walls -->
+                <div class="wall" style="top: 60px; left: 340px; width: 80px; height: 20px;"></div>
+                <div class="wall" style="top: 80px; left: 400px; width: 20px; height: 60px;"></div>
+                <div class="wall" style="top: 120px; left: 340px; width: 80px; height: 20px;"></div>
+                <div class="wall" style="top: 160px; left: 360px; width: 20px; height: 80px;"></div>
+                <div class="wall" style="top: 220px; left: 380px; width: 100px; height: 20px;"></div>
+                <div class="wall" style="top: 260px; left: 320px; width: 20px; height: 60px;"></div>
+                <div class="wall" style="top: 300px; left: 240px; width: 100px; height: 20px;"></div>
+                
+                <!-- More complex internal walls -->
+                <div class="wall" style="top: 280px; left: 180px; width: 20px; height: 40px;"></div>
+                <div class="wall" style="top: 320px; left: 100px; width: 100px; height: 20px;"></div>
+                <div class="wall" style="top: 340px; left: 140px; width: 20px; height: 40px;"></div>
+                <div class="wall" style="top: 100px; left: 300px; width: 20px; height: 40px;"></div>
+                <div class="wall" style="top: 20px; left: 200px; width: 60px; height: 20px;"></div>
+                <div class="wall" style="top: 20px; left: 300px; width: 20px; height: 40px;"></div>
+            </div>
+        </div>
+        
+        <div class="status" id="status">Move your mouse to the green START circle to begin!</div>
+        <div class="win-message" id="winMessage">🎉 Congratulations! You reached the goal! 🎉</div>
+        <div class="reset-message" id="resetMessage">💥 You hit a wall! Back to start!</div>
+    </div>
+
+    <script>
+        const maze = document.getElementById('maze');
+        const cursor = document.getElementById('cursor');
+        const status = document.getElementById('status');
+        const winMessage = document.getElementById('winMessage');
+        const resetMessage = document.getElementById('resetMessage');
+        
+        let gameStarted = false;
+        let gameWon = false;
+        const startPos = { x: 20, y: 50 };
+        const goalArea = { x: 280, y: 180, width: 40, height: 40 };
+        
+        // Position cursor at start
+        cursor.style.left = startPos.x + 'px';
+        cursor.style.top = startPos.y + 'px';
+        
+        maze.addEventListener('mousemove', (e) => {
+            if (gameWon) return;
+            
+            const rect = maze.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            
+            // Check if mouse is in start area to begin game
+            if (!gameStarted) {
+                const distToStart = Math.sqrt((x - startPos.x) ** 2 + (y - startPos.y) ** 2);
+                if (distToStart < 15) {
+                    gameStarted = true;
+                    status.textContent = "Navigate to the red GOAL without hitting the walls!";
+                }
+            }
+            
+            if (gameStarted) {
+                // Update cursor position
+                cursor.style.left = (x - 6) + 'px';
+                cursor.style.top = (y - 6) + 'px';
+                
+                // Check wall collision
+                if (checkWallCollision(x, y)) {
+                    resetGame();
+                    return;
+                }
+                
+                // Check if reached goal
+                if (x >= goalArea.x && x <= goalArea.x + goalArea.width &&
+                    y >= goalArea.y && y <= goalArea.y + goalArea.height) {
+                    winGame();
+                }
+            }
+        });
+        
+        maze.addEventListener('mouseleave', () => {
+            if (gameStarted && !gameWon) {
+                resetGame();
+            }
+        });
+        
+        function checkWallCollision(x, y) {
+            const walls = document.querySelectorAll('.wall');
+            
+            for (let wall of walls) {
+                const rect = wall.getBoundingClientRect();
+                const mazeRect = maze.getBoundingClientRect();
+                
+                const wallX = rect.left - mazeRect.left;
+                const wallY = rect.top - mazeRect.top;
+                const wallWidth = rect.width;
+                const wallHeight = rect.height;
+                
+                if (x >= wallX && x <= wallX + wallWidth &&
+                    y >= wallY && y <= wallY + wallHeight) {
+                    return true;
+                }
+            }
+            return false;
+        }
+        
+        function resetGame() {
+            gameStarted = false;
+            cursor.style.left = startPos.x + 'px';
+            cursor.style.top = startPos.y + 'px';
+            cursor.style.background = '#ff4444';
+            status.textContent = "Move your mouse to the green START circle to try again!";
+            
+            resetMessage.style.display = 'inline-block';
+            setTimeout(() => {
+                resetMessage.style.display = 'none';
+                cursor.style.background = '#2196F3';
+            }, 1500);
+        }
+        
+        function winGame() {
+            gameWon = true;
+            cursor.style.background = '#4CAF50';
+            status.textContent = "🎉 YOU WIN! 🎉";
+            winMessage.style.display = 'inline-block';
+            
+            // Reset after 3 seconds
+            setTimeout(() => {
+                gameWon = false;
+                gameStarted = false;
+                cursor.style.left = startPos.x + 'px';
+                cursor.style.top = startPos.y + 'px';
+                cursor.style.background = '#2196F3';
+                status.textContent = "Move your mouse to the green START circle to play again!";
+                winMessage.style.display = 'none';
+            }, 3000);
+        }
+    </script>
 </body>
 </html>
