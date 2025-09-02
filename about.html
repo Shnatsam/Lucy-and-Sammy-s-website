@@ -3,314 +3,373 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mouse Maze Game</title>
+    <title>Hangman Game</title>
     <style>
-        body {
+        * {
             margin: 0;
-            padding: 20px;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
             font-family: 'Arial', sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             display: flex;
-            flex-direction: column;
-            align-items: center;
             justify-content: center;
+            align-items: center;
+            padding: 20px;
         }
 
         .game-container {
             background: white;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            padding: 20px;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            max-width: 500px;
+            width: 100%;
             text-align: center;
         }
 
-        .maze-container {
-            position: relative;
-            display: inline-block;
-            border: 3px solid #333;
-            background: #f0f0f0;
-            border-radius: 10px;
-            overflow: hidden;
-        }
-
-        .maze {
-            width: 600px;
-            height: 400px;
-            position: relative;
-            background: #fff;
-            cursor: none;
-        }
-
-        .wall {
-            position: absolute;
-            background: #333;
-        }
-
-        .start {
-            position: absolute;
-            background: #4CAF50;
-            border-radius: 50%;
-            width: 20px;
-            height: 20px;
-            left: 10px;
-            top: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: bold;
-            font-size: 12px;
-        }
-
-        .goal {
-            position: absolute;
-            background: #ff4444;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            left: 280px;
-            top: 180px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: bold;
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 68, 68, 0.7); }
-            70% { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(255, 68, 68, 0); }
-            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 68, 68, 0); }
-        }
-
-        .mouse-cursor {
-            position: absolute;
-            width: 12px;
-            height: 12px;
-            background: #2196F3;
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 10;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.3);
-            transition: background 0.2s;
-        }
-
-        .status {
-            margin-top: 20px;
-            font-size: 18px;
-            font-weight: bold;
+        h1 {
             color: #333;
-        }
-
-        .instructions {
             margin-bottom: 20px;
-            color: #666;
-            max-width: 600px;
-            line-height: 1.4;
+            font-size: 2.5em;
         }
 
-        .win-message {
-            background: #4CAF50;
+        .hangman-display {
+            font-family: 'Courier New', monospace;
+            font-size: 1.2em;
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            white-space: pre-line;
+            color: #333;
+            min-height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .word-display {
+            font-size: 2em;
+            font-weight: bold;
+            letter-spacing: 0.3em;
+            margin: 20px 0;
+            color: #333;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .input-section {
+            margin: 20px 0;
+        }
+
+        #letterInput {
+            padding: 15px;
+            font-size: 1.2em;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            width: 80px;
+            text-align: center;
+            text-transform: uppercase;
+            margin-right: 10px;
+        }
+
+        #letterInput:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        button {
+            padding: 15px 25px;
+            font-size: 1.1em;
+            background: #667eea;
             color: white;
-            padding: 10px 20px;
-            border-radius: 25px;
-            margin-top: 10px;
-            font-size: 20px;
-            display: none;
-            animation: celebrate 0.5s ease-out;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background 0.3s;
+            margin: 5px;
         }
 
-        @keyframes celebrate {
-            0% { transform: scale(0.8); opacity: 0; }
-            100% { transform: scale(1); opacity: 1; }
+        button:hover {
+            background: #5a67d8;
         }
 
-        .reset-message {
-            background: #ff4444;
-            color: white;
-            padding: 5px 15px;
-            border-radius: 20px;
-            margin-top: 10px;
-            font-size: 16px;
-            display: none;
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .wrong-letters {
+            margin: 20px 0;
+            padding: 15px;
+            background: #ffe6e6;
+            border-radius: 10px;
+            color: #d63031;
+            font-weight: bold;
+        }
+
+        .game-status {
+            font-size: 1.5em;
+            font-weight: bold;
+            margin: 20px 0;
+            min-height: 40px;
+        }
+
+        .win {
+            color: #00b894;
+        }
+
+        .lose {
+            color: #e17055;
+        }
+
+        .alphabet-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(40px, 1fr));
+            gap: 5px;
+            margin: 20px 0;
+        }
+
+        .alphabet-buttons button {
+            padding: 10px 5px;
+            font-size: 1em;
+            min-width: 40px;
+        }
+
+        .alphabet-buttons button:disabled {
+            background: #f8f9fa;
+            color: #999;
+        }
+
+        @media (max-width: 600px) {
+            .game-container {
+                padding: 20px;
+                margin: 10px;
+            }
+            
+            h1 {
+                font-size: 2em;
+            }
+            
+            .word-display {
+                font-size: 1.5em;
+            }
+            
+            .hangman-display {
+                font-size: 1em;
+                padding: 15px;
+                min-height: 150px;
+            }
+            
+            #letterInput {
+                width: 60px;
+                padding: 12px;
+            }
+            
+            button {
+                padding: 12px 20px;
+                font-size: 1em;
+            }
         }
     </style>
 </head>
 <body>
     <div class="game-container">
-        <h1>🐭 Mouse Maze Challenge</h1>
-        <div class="instructions">
-            Move your mouse from the green START circle to the red GOAL in the center. 
-            Don't touch the black walls or you'll be reset to the beginning!
+        <h1>🎯 Hangman</h1>
+        
+        <div class="hangman-display" id="hangmanDisplay"></div>
+        
+        <div class="word-display" id="wordDisplay"></div>
+        
+        <div class="input-section">
+            <input type="text" id="letterInput" maxlength="1" placeholder="?" />
+            <button onclick="guessLetter()" id="guessBtn">Guess</button>
         </div>
         
-        <div class="maze-container">
-            <div class="maze" id="maze">
-                <!-- Start point -->
-                <div class="start">START</div>
-                
-                <!-- Goal point -->
-                <div class="goal">GOAL</div>
-                
-                <!-- Custom cursor -->
-                <div class="mouse-cursor" id="cursor"></div>
-                
-                <!-- Maze walls -->
-                <!-- Outer walls -->
-                <div class="wall" style="top: 0; left: 0; width: 100%; height: 20px;"></div>
-                <div class="wall" style="bottom: 0; left: 0; width: 100%; height: 20px;"></div>
-                <div class="wall" style="top: 0; left: 0; width: 20px; height: 100%;"></div>
-                <div class="wall" style="top: 0; right: 0; width: 20px; height: 100%;"></div>
-                
-                <!-- Opening for start -->
-                <div class="wall" style="top: 20px; left: 0; width: 20px; height: 20px;"></div>
-                <div class="wall" style="top: 80px; left: 0; width: 20px; height: 100%;"></div>
-                
-                <!-- Maze internal walls -->
-                <div class="wall" style="top: 60px; left: 60px; width: 100px; height: 20px;"></div>
-                <div class="wall" style="top: 20px; left: 140px; width: 20px; height: 100px;"></div>
-                <div class="wall" style="top: 100px; left: 200px; width: 80px; height: 20px;"></div>
-                <div class="wall" style="top: 140px; left: 80px; width: 20px; height: 80px;"></div>
-                <div class="wall" style="top: 140px; left: 100px; width: 60px; height: 20px;"></div>
-                <div class="wall" style="top: 200px; left: 140px; width: 20px; height: 60px;"></div>
-                <div class="wall" style="top: 240px; left: 20px; width: 140px; height: 20px;"></div>
-                <div class="wall" style="top: 180px; left: 200px; width: 20px; height: 40px;"></div>
-                <div class="wall" style="top: 200px; left: 220px; width: 40px; height: 20px;"></div>
-                
-                <!-- Right side walls -->
-                <div class="wall" style="top: 60px; left: 340px; width: 80px; height: 20px;"></div>
-                <div class="wall" style="top: 80px; left: 400px; width: 20px; height: 60px;"></div>
-                <div class="wall" style="top: 120px; left: 340px; width: 80px; height: 20px;"></div>
-                <div class="wall" style="top: 160px; left: 360px; width: 20px; height: 80px;"></div>
-                <div class="wall" style="top: 220px; left: 380px; width: 100px; height: 20px;"></div>
-                <div class="wall" style="top: 260px; left: 320px; width: 20px; height: 60px;"></div>
-                <div class="wall" style="top: 300px; left: 240px; width: 100px; height: 20px;"></div>
-                
-                <!-- More complex internal walls -->
-                <div class="wall" style="top: 280px; left: 180px; width: 20px; height: 40px;"></div>
-                <div class="wall" style="top: 320px; left: 100px; width: 100px; height: 20px;"></div>
-                <div class="wall" style="top: 340px; left: 140px; width: 20px; height: 40px;"></div>
-                <div class="wall" style="top: 100px; left: 300px; width: 20px; height: 40px;"></div>
-                <div class="wall" style="top: 20px; left: 200px; width: 60px; height: 20px;"></div>
-                <div class="wall" style="top: 20px; left: 300px; width: 20px; height: 40px;"></div>
-            </div>
-        </div>
+        <div class="alphabet-buttons" id="alphabetButtons"></div>
         
-        <div class="status" id="status">Move your mouse to the green START circle to begin!</div>
-        <div class="win-message" id="winMessage">🎉 Congratulations! You reached the goal! 🎉</div>
-        <div class="reset-message" id="resetMessage">💥 You hit a wall! Back to start!</div>
+        <div class="wrong-letters" id="wrongLetters" style="display: none;"></div>
+        
+        <div class="game-status" id="gameStatus"></div>
+        
+        <button onclick="newGame()" id="newGameBtn">New Game</button>
     </div>
 
     <script>
-        const maze = document.getElementById('maze');
-        const cursor = document.getElementById('cursor');
-        const status = document.getElementById('status');
-        const winMessage = document.getElementById('winMessage');
-        const resetMessage = document.getElementById('resetMessage');
-        
-        let gameStarted = false;
-        let gameWon = false;
-        const startPos = { x: 20, y: 50 };
-        const goalArea = { x: 280, y: 180, width: 40, height: 40 };
-        
-        // Position cursor at start
-        cursor.style.left = startPos.x + 'px';
-        cursor.style.top = startPos.y + 'px';
-        
-        maze.addEventListener('mousemove', (e) => {
-            if (gameWon) return;
+        const words = [
+            'JAVASCRIPT', 'COMPUTER', 'INTERNET', 'KEYBOARD', 'MONITOR', 'WEBSITE',
+            'PROGRAM', 'CODING', 'BROWSER', 'MOBILE', 'TABLET', 'SCREEN',
+            'MOUSE', 'WINDOW', 'BUTTON', 'CLICK', 'TOUCH', 'SWIPE',
+            'GAME', 'PLAY', 'WIN', 'LOSE', 'SCORE', 'LEVEL'
+        ];
+
+        const hangmanStages = [
+            '',
+            '  +---+\n      |\n      |\n      |\n      |\n      |\n=========',
+            '  +---+\n  |   |\n      |\n      |\n      |\n      |\n=========',
+            '  +---+\n  |   |\n  O   |\n      |\n      |\n      |\n=========',
+            '  +---+\n  |   |\n  O   |\n  |   |\n      |\n      |\n=========',
+            '  +---+\n  |   |\n  O   |\n /|   |\n      |\n      |\n=========',
+            '  +---+\n  |   |\n  O   |\n /|\\  |\n      |\n      |\n=========',
+            '  +---+\n  |   |\n  O   |\n /|\\  |\n /    |\n      |\n=========',
+            '  +---+\n  |   |\n  O   |\n /|\\  |\n / \\  |\n      |\n========='
+        ];
+
+        let currentWord = '';
+        let guessedLetters = [];
+        let wrongGuesses = 0;
+        let gameOver = false;
+
+        function initGame() {
+            currentWord = words[Math.floor(Math.random() * words.length)];
+            guessedLetters = [];
+            wrongGuesses = 0;
+            gameOver = false;
             
-            const rect = maze.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
+            updateDisplay();
+            updateHangman();
+            updateGameStatus();
+            createAlphabetButtons();
             
-            // Check if mouse is in start area to begin game
-            if (!gameStarted) {
-                const distToStart = Math.sqrt((x - startPos.x) ** 2 + (y - startPos.y) ** 2);
-                if (distToStart < 15) {
-                    gameStarted = true;
-                    status.textContent = "Navigate to the red GOAL without hitting the walls!";
+            document.getElementById('letterInput').disabled = false;
+            document.getElementById('guessBtn').disabled = false;
+            document.getElementById('wrongLetters').style.display = 'none';
+        }
+
+        function createAlphabetButtons() {
+            const container = document.getElementById('alphabetButtons');
+            container.innerHTML = '';
+            
+            for (let i = 65; i <= 90; i++) {
+                const letter = String.fromCharCode(i);
+                const button = document.createElement('button');
+                button.textContent = letter;
+                button.onclick = () => guessLetterFromButton(letter);
+                button.id = `btn-${letter}`;
+                container.appendChild(button);
+            }
+        }
+
+        function updateDisplay() {
+            let display = '';
+            for (let letter of currentWord) {
+                if (guessedLetters.includes(letter)) {
+                    display += letter + ' ';
+                } else {
+                    display += '_ ';
                 }
             }
+            document.getElementById('wordDisplay').textContent = display.trim();
+        }
+
+        function updateHangman() {
+            document.getElementById('hangmanDisplay').textContent = hangmanStages[wrongGuesses];
+        }
+
+        function updateGameStatus() {
+            const status = document.getElementById('gameStatus');
             
-            if (gameStarted) {
-                // Update cursor position
-                cursor.style.left = (x - 6) + 'px';
-                cursor.style.top = (y - 6) + 'px';
-                
-                // Check wall collision
-                if (checkWallCollision(x, y)) {
-                    resetGame();
-                    return;
+            if (gameOver) {
+                if (wrongGuesses >= hangmanStages.length - 1) {
+                    status.textContent = `💀 Game Over! The word was: ${currentWord}`;
+                    status.className = 'game-status lose';
+                } else {
+                    status.textContent = '🎉 Congratulations! You won!';
+                    status.className = 'game-status win';
                 }
-                
-                // Check if reached goal
-                if (x >= goalArea.x && x <= goalArea.x + goalArea.width &&
-                    y >= goalArea.y && y <= goalArea.y + goalArea.height) {
-                    winGame();
-                }
+            } else {
+                status.textContent = `Wrong guesses: ${wrongGuesses}/8`;
+                status.className = 'game-status';
+            }
+        }
+
+        function updateWrongLetters() {
+            const wrongLetters = guessedLetters.filter(letter => !currentWord.includes(letter));
+            const wrongLettersDiv = document.getElementById('wrongLetters');
+            
+            if (wrongLetters.length > 0) {
+                wrongLettersDiv.style.display = 'block';
+                wrongLettersDiv.textContent = `Wrong letters: ${wrongLetters.join(', ')}`;
+            } else {
+                wrongLettersDiv.style.display = 'none';
+            }
+        }
+
+        function guessLetter() {
+            const input = document.getElementById('letterInput');
+            const letter = input.value.toUpperCase();
+            
+            if (letter && !guessedLetters.includes(letter) && /^[A-Z]$/.test(letter)) {
+                processGuess(letter);
+            }
+            
+            input.value = '';
+            input.focus();
+        }
+
+        function guessLetterFromButton(letter) {
+            if (!guessedLetters.includes(letter) && !gameOver) {
+                processGuess(letter);
+            }
+        }
+
+        function processGuess(letter) {
+            guessedLetters.push(letter);
+            
+            // Disable the alphabet button
+            const button = document.getElementById(`btn-${letter}`);
+            if (button) {
+                button.disabled = true;
+            }
+            
+            if (!currentWord.includes(letter)) {
+                wrongGuesses++;
+            }
+            
+            updateDisplay();
+            updateHangman();
+            updateWrongLetters();
+            
+            // Check win condition
+            if (currentWord.split('').every(letter => guessedLetters.includes(letter))) {
+                gameOver = true;
+                document.getElementById('letterInput').disabled = true;
+                document.getElementById('guessBtn').disabled = true;
+            }
+            
+            // Check lose condition
+            if (wrongGuesses >= hangmanStages.length - 1) {
+                gameOver = true;
+                document.getElementById('letterInput').disabled = true;
+                document.getElementById('guessBtn').disabled = true;
+            }
+            
+            updateGameStatus();
+        }
+
+        function newGame() {
+            initGame();
+        }
+
+        // Event listeners
+        document.getElementById('letterInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                guessLetter();
             }
         });
-        
-        maze.addEventListener('mouseleave', () => {
-            if (gameStarted && !gameWon) {
-                resetGame();
-            }
+
+        document.getElementById('letterInput').addEventListener('input', function(e) {
+            e.target.value = e.target.value.toUpperCase();
         });
-        
-        function checkWallCollision(x, y) {
-            const walls = document.querySelectorAll('.wall');
-            
-            for (let wall of walls) {
-                const rect = wall.getBoundingClientRect();
-                const mazeRect = maze.getBoundingClientRect();
-                
-                const wallX = rect.left - mazeRect.left;
-                const wallY = rect.top - mazeRect.top;
-                const wallWidth = rect.width;
-                const wallHeight = rect.height;
-                
-                if (x >= wallX && x <= wallX + wallWidth &&
-                    y >= wallY && y <= wallY + wallHeight) {
-                    return true;
-                }
-            }
-            return false;
-        }
-        
-        function resetGame() {
-            gameStarted = false;
-            cursor.style.left = startPos.x + 'px';
-            cursor.style.top = startPos.y + 'px';
-            cursor.style.background = '#ff4444';
-            status.textContent = "Move your mouse to the green START circle to try again!";
-            
-            resetMessage.style.display = 'inline-block';
-            setTimeout(() => {
-                resetMessage.style.display = 'none';
-                cursor.style.background = '#2196F3';
-            }, 1500);
-        }
-        
-        function winGame() {
-            gameWon = true;
-            cursor.style.background = '#4CAF50';
-            status.textContent = "🎉 YOU WIN! 🎉";
-            winMessage.style.display = 'inline-block';
-            
-            // Reset after 3 seconds
-            setTimeout(() => {
-                gameWon = false;
-                gameStarted = false;
-                cursor.style.left = startPos.x + 'px';
-                cursor.style.top = startPos.y + 'px';
-                cursor.style.background = '#2196F3';
-                status.textContent = "Move your mouse to the green START circle to play again!";
-                winMessage.style.display = 'none';
-            }, 3000);
-        }
+
+        // Initialize the game
+        initGame();
     </script>
 </body>
 </html>
