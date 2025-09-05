@@ -18,7 +18,7 @@
         }
         
         .container {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
             background: white;
             border-radius: 8px;
@@ -85,8 +85,10 @@
             background: white;
             padding: 24px;
             border-radius: 8px;
-            width: 400px;
+            width: 450px;
             max-width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
         }
         
         .modal-header {
@@ -146,46 +148,86 @@
         }
         
         .gantt-container {
-            overflow-x: auto;
+            overflow: auto;
+            max-height: 600px;
         }
         
         .gantt-header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: white;
+            border-bottom: 2px solid #e2e8f0;
+        }
+        
+        .year-row {
             display: grid;
-            grid-template-columns: 300px 1fr;
+            grid-template-columns: 350px 1fr;
+            background: #f8fafc;
             border-bottom: 1px solid #e2e8f0;
         }
         
-        .gantt-header-left {
-            padding: 16px;
-            background: #f8fafc;
+        .year-label {
+            padding: 8px 16px;
             font-weight: 600;
             color: #374151;
+            background: #f1f5f9;
+            border-right: 1px solid #e2e8f0;
         }
         
-        .gantt-header-right {
+        .year-header {
+            display: flex;
+        }
+        
+        .year-section {
+            flex: 1;
+            text-align: center;
+            padding: 8px;
+            font-weight: 600;
+            color: #1f2937;
+            border-right: 1px solid #e2e8f0;
+        }
+        
+        .date-row {
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            background: #f8fafc;
+        }
+        
+        .date-header-left {
+            padding: 12px 16px;
+            background: #f1f5f9;
+            font-weight: 600;
+            color: #374151;
+            border-right: 1px solid #e2e8f0;
+        }
+        
+        .date-header-right {
             display: flex;
             background: #f8fafc;
-            border-left: 1px solid #e2e8f0;
         }
         
         .date-header {
             flex: 1;
-            padding: 16px 8px;
+            padding: 12px 4px;
             text-align: center;
-            font-size: 12px;
+            font-size: 11px;
             color: #6b7280;
             border-right: 1px solid #e2e8f0;
+            min-width: 30px;
         }
         
         .task-row {
             display: grid;
-            grid-template-columns: 300px 1fr;
+            grid-template-columns: 350px 1fr;
             border-bottom: 1px solid #e2e8f0;
-            min-height: 60px;
+            min-height: 70px;
         }
         
         .task-info {
-            padding: 16px;
+            padding: 12px 16px;
+            background: #fafbfc;
+            border-right: 1px solid #e2e8f0;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -194,26 +236,35 @@
         .task-details h3 {
             font-weight: 600;
             color: #1f2937;
-            margin-bottom: 4px;
+            margin-bottom: 2px;
+            font-size: 14px;
         }
         
         .task-details p {
-            font-size: 12px;
+            font-size: 11px;
             color: #6b7280;
+            margin-bottom: 1px;
+        }
+        
+        .task-owner {
+            font-weight: 500;
+            color: #3b82f6;
         }
         
         .task-actions {
             display: flex;
             gap: 4px;
+            flex-direction: column;
         }
         
         .task-actions button {
-            padding: 4px;
+            padding: 2px 4px;
             border: none;
             background: none;
             cursor: pointer;
             color: #6b7280;
             border-radius: 4px;
+            font-size: 12px;
         }
         
         .task-actions button:hover {
@@ -222,22 +273,38 @@
         
         .timeline {
             position: relative;
-            border-left: 1px solid #e2e8f0;
-            height: 60px;
+            height: 70px;
+            background: white;
+        }
+        
+        .timeline-grid {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: flex;
+        }
+        
+        .grid-line {
+            flex: 1;
+            border-right: 1px solid #f1f5f9;
+            min-width: 30px;
         }
         
         .task-bar {
             position: absolute;
-            height: 24px;
-            top: 18px;
+            height: 28px;
+            top: 21px;
             border-radius: 4px;
             display: flex;
             align-items: center;
             padding: 0 8px;
             color: white;
-            font-size: 12px;
+            font-size: 11px;
             font-weight: 500;
             cursor: pointer;
+            overflow: hidden;
         }
         
         .progress-bar {
@@ -247,6 +314,46 @@
             border-radius: 4px;
             top: 0;
             left: 0;
+        }
+        
+        .task-name-on-bar {
+            position: relative;
+            z-index: 2;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .progress-slider {
+            margin-top: 8px;
+        }
+        
+        .progress-slider input[type="range"] {
+            width: 100%;
+            height: 4px;
+            border-radius: 2px;
+            background: #d1d5db;
+            outline: none;
+            -webkit-appearance: none;
+        }
+        
+        .progress-slider input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #3b82f6;
+            cursor: pointer;
+        }
+        
+        .progress-slider input[type="range"]::-moz-range-thumb {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #3b82f6;
+            cursor: pointer;
+            border: none;
         }
         
         .empty-state {
@@ -286,12 +393,20 @@
                 <input type="text" id="taskName" class="form-input" placeholder="Enter task name">
             </div>
             <div class="form-group">
+                <label class="form-label">Task Owner</label>
+                <input type="text" id="taskOwner" class="form-input" placeholder="Who is responsible for this task?">
+            </div>
+            <div class="form-group">
                 <label class="form-label">Start Date</label>
                 <input type="date" id="startDate" class="form-input">
             </div>
             <div class="form-group">
                 <label class="form-label">End Date</label>
                 <input type="date" id="endDate" class="form-input">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Progress (%)</label>
+                <input type="number" id="taskProgress" class="form-input" min="0" max="100" value="0" placeholder="0-100">
             </div>
             <div class="form-group">
                 <label class="form-label">Color</label>
@@ -306,11 +421,49 @@
         </div>
     </div>
 
+    <!-- Edit Task Modal -->
+    <div id="editTaskModal" class="modal">
+        <div class="modal-content">
+            <h2 class="modal-header">Edit Task</h2>
+            <div class="form-group">
+                <label class="form-label">Task Name</label>
+                <input type="text" id="editTaskName" class="form-input">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Task Owner</label>
+                <input type="text" id="editTaskOwner" class="form-input">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Start Date</label>
+                <input type="date" id="editStartDate" class="form-input">
+            </div>
+            <div class="form-group">
+                <label class="form-label">End Date</label>
+                <input type="date" id="editEndDate" class="form-input">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Progress (%)</label>
+                <input type="number" id="editTaskProgress" class="form-input" min="0" max="100">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Color</label>
+                <div class="color-picker" id="editColorPicker">
+                    <!-- Colors will be added by JavaScript -->
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-secondary" onclick="hideEditTaskModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="saveEditTask()">Update</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         let tasks = [
             {
                 id: 1,
                 name: "Project Planning",
+                owner: "Alice",
                 startDate: "2024-09-05",
                 endDate: "2024-09-12",
                 color: "#3B82F6",
@@ -319,6 +472,7 @@
             {
                 id: 2,
                 name: "Design Phase",
+                owner: "Bob",
                 startDate: "2024-09-10",
                 endDate: "2024-09-20",
                 color: "#10B981",
@@ -327,6 +481,7 @@
             {
                 id: 3,
                 name: "Development",
+                owner: "Alice",
                 startDate: "2024-09-18",
                 endDate: "2024-10-05",
                 color: "#F59E0B",
@@ -336,10 +491,11 @@
 
         const colors = ['#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6', '#06B6D4'];
         let selectedColor = '#3B82F6';
+        let editingTaskId = null;
 
         function generateDateRange() {
             const start = new Date('2024-09-01');
-            const end = new Date('2024-10-31');
+            const end = new Date('2024-12-31');
             const dates = [];
             const current = new Date(start);
             
@@ -349,6 +505,16 @@
             }
             
             return dates;
+        }
+
+        function generateYearSections(dates) {
+            const years = {};
+            dates.forEach(date => {
+                const year = date.getFullYear();
+                if (!years[year]) years[year] = 0;
+                years[year]++;
+            });
+            return years;
         }
 
         function getTaskBarStyle(task, dates) {
@@ -374,8 +540,17 @@
             return new Date(dateStr).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
         }
 
+        function updateProgress(taskId, newProgress) {
+            const task = tasks.find(t => t.id === taskId);
+            if (task) {
+                task.progress = parseInt(newProgress);
+                renderGanttChart();
+            }
+        }
+
         function renderGanttChart() {
             const dates = generateDateRange();
+            const years = generateYearSections(dates);
             const container = document.getElementById('gantt-chart');
             
             if (tasks.length === 0) {
@@ -389,19 +564,51 @@
                 return;
             }
 
-            let html = `
-                <div class="gantt-header">
-                    <div class="gantt-header-left">Tasks</div>
-                    <div class="gantt-header-right">
-                        ${dates.filter((_, index) => index % 7 === 0).map(date => `
-                            <div class="date-header">
-                                ${date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
-                            </div>
-                        `).join('')}
+            // Year header
+            let yearHeaderHtml = `
+                <div class="year-row">
+                    <div class="year-label">Year</div>
+                    <div class="year-header">
+            `;
+            
+            Object.entries(years).forEach(([year, dayCount]) => {
+                const yearWidth = (dayCount / dates.length) * 100;
+                yearHeaderHtml += `<div class="year-section" style="width: ${yearWidth}%">${year}</div>`;
+            });
+            
+            yearHeaderHtml += `
                     </div>
                 </div>
             `;
 
+            // Date header
+            let dateHeaderHtml = `
+                <div class="date-row">
+                    <div class="date-header-left">Tasks</div>
+                    <div class="date-header-right">
+            `;
+            
+            dates.filter((_, index) => index % 7 === 0).forEach(date => {
+                dateHeaderHtml += `
+                    <div class="date-header">
+                        ${date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                    </div>
+                `;
+            });
+            
+            dateHeaderHtml += `
+                    </div>
+                </div>
+            `;
+
+            let html = `
+                <div class="gantt-header">
+                    ${yearHeaderHtml}
+                    ${dateHeaderHtml}
+                </div>
+            `;
+
+            // Task rows
             tasks.forEach(task => {
                 const style = getTaskBarStyle(task, dates);
                 html += `
@@ -409,18 +616,28 @@
                         <div class="task-info">
                             <div class="task-details">
                                 <h3>${task.name}</h3>
-                                <p>${formatDate(task.startDate)} - ${formatDate(task.endDate)}</p>
-                                <p>Progress: ${task.progress}%</p>
+                                <p class="task-owner">👤 ${task.owner || 'Unassigned'}</p>
+                                <p>📅 ${formatDate(task.startDate)} - ${formatDate(task.endDate)}</p>
+                                <p>📊 Progress: ${task.progress}%</p>
+                                <div class="progress-slider">
+                                    <input type="range" min="0" max="100" value="${task.progress}" 
+                                           onchange="updateProgress(${task.id}, this.value)">
+                                </div>
                             </div>
                             <div class="task-actions">
-                                <button onclick="deleteTask(${task.id})" title="Delete">🗑️</button>
+                                <button onclick="editTask(${task.id})" title="Edit">✏️ Edit</button>
+                                <button onclick="deleteTask(${task.id})" title="Delete">🗑️ Delete</button>
                             </div>
                         </div>
                         <div class="timeline">
+                            <div class="timeline-grid">
+                                ${dates.filter((_, index) => index % 7 === 0).map(() => '<div class="grid-line"></div>').join('')}
+                            </div>
                             <div class="task-bar" 
-                                 style="left: ${style.left}%; width: ${style.width}%; background-color: ${style.backgroundColor}">
+                                 style="left: ${style.left}%; width: ${style.width}%; background-color: ${style.backgroundColor}"
+                                 onclick="editTask(${task.id})">
                                 <div class="progress-bar" style="width: ${task.progress}%"></div>
-                                ${task.name}
+                                <span class="task-name-on-bar">${task.name}</span>
                             </div>
                         </div>
                     </div>
@@ -432,7 +649,7 @@
 
         function showAddTaskModal() {
             document.getElementById('addTaskModal').style.display = 'flex';
-            setupColorPicker();
+            setupColorPicker('colorPicker');
         }
 
         function hideAddTaskModal() {
@@ -440,33 +657,80 @@
             clearForm();
         }
 
-        function setupColorPicker() {
-            const picker = document.getElementById('colorPicker');
+        function editTask(taskId) {
+            const task = tasks.find(t => t.id === taskId);
+            if (!task) return;
+
+            editingTaskId = taskId;
+            document.getElementById('editTaskName').value = task.name;
+            document.getElementById('editTaskOwner').value = task.owner || '';
+            document.getElementById('editStartDate').value = task.startDate;
+            document.getElementById('editEndDate').value = task.endDate;
+            document.getElementById('editTaskProgress').value = task.progress;
+            selectedColor = task.color;
+            
+            setupColorPicker('editColorPicker');
+            document.getElementById('editTaskModal').style.display = 'flex';
+        }
+
+        function hideEditTaskModal() {
+            document.getElementById('editTaskModal').style.display = 'none';
+            editingTaskId = null;
+        }
+
+        function saveEditTask() {
+            const task = tasks.find(t => t.id === editingTaskId);
+            if (!task) return;
+
+            const name = document.getElementById('editTaskName').value;
+            const owner = document.getElementById('editTaskOwner').value;
+            const startDate = document.getElementById('editStartDate').value;
+            const endDate = document.getElementById('editEndDate').value;
+            const progress = parseInt(document.getElementById('editTaskProgress').value) || 0;
+
+            if (name && startDate && endDate) {
+                task.name = name;
+                task.owner = owner;
+                task.startDate = startDate;
+                task.endDate = endDate;
+                task.progress = progress;
+                task.color = selectedColor;
+                
+                hideEditTaskModal();
+                renderGanttChart();
+            }
+        }
+
+        function setupColorPicker(pickerId) {
+            const picker = document.getElementById(pickerId);
             picker.innerHTML = colors.map(color => `
                 <div class="color-option ${color === selectedColor ? 'selected' : ''}" 
                      style="background-color: ${color}"
-                     onclick="selectColor('${color}')"></div>
+                     onclick="selectColor('${color}', '${pickerId}')"></div>
             `).join('');
         }
 
-        function selectColor(color) {
+        function selectColor(color, pickerId) {
             selectedColor = color;
-            setupColorPicker();
+            setupColorPicker(pickerId);
         }
 
         function addTask() {
             const name = document.getElementById('taskName').value;
+            const owner = document.getElementById('taskOwner').value;
             const startDate = document.getElementById('startDate').value;
             const endDate = document.getElementById('endDate').value;
+            const progress = parseInt(document.getElementById('taskProgress').value) || 0;
 
             if (name && startDate && endDate) {
                 const newTask = {
                     id: Date.now(),
                     name,
+                    owner,
                     startDate,
                     endDate,
                     color: selectedColor,
-                    progress: 0
+                    progress
                 };
                 
                 tasks.push(newTask);
@@ -484,8 +748,10 @@
 
         function clearForm() {
             document.getElementById('taskName').value = '';
+            document.getElementById('taskOwner').value = '';
             document.getElementById('startDate').value = '';
             document.getElementById('endDate').value = '';
+            document.getElementById('taskProgress').value = '0';
             selectedColor = '#3B82F6';
         }
 
