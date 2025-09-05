@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -532,6 +533,11 @@
         }
 
         function updateStatusBadge(badge, newStatus) {
+            if (!badge || !statusConfig[newStatus]) {
+                console.error('Invalid badge or status:', badge, newStatus);
+                return;
+            }
+            
             const config = statusConfig[newStatus];
             
             // Remove all status classes
@@ -578,7 +584,9 @@
             setTimeout(() => {
                 notification.style.transform = 'translateX(100%)';
                 setTimeout(() => {
-                    document.body.removeChild(notification);
+                    if (notification.parentNode) {
+                        document.body.removeChild(notification);
+                    }
                 }, 300);
             }, 2000);
         }
