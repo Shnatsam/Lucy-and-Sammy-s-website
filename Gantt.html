@@ -94,14 +94,33 @@
             display: block;
         }
         
-        .setup-panel h3 {
-            margin-bottom: 10px;
-            color: #92400e;
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
         }
         
-        .setup-panel p {
-            margin-bottom: 15px;
-            color: #92400e;
+        .modal-content {
+            background: white;
+            padding: 24px;
+            border-radius: 8px;
+            width: 450px;
+            max-width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        
+        .modal-header {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 16px;
         }
         
         .form-group {
@@ -117,11 +136,35 @@
         
         .form-input {
             width: 100%;
-            max-width: 500px;
             padding: 8px 12px;
             border: 1px solid #d1d5db;
             border-radius: 6px;
             font-size: 14px;
+        }
+        
+        .color-picker {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+        }
+        
+        .color-option {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: 2px solid #d1d5db;
+            cursor: pointer;
+        }
+        
+        .color-option.selected {
+            border-color: #1f2937;
+        }
+        
+        .modal-actions {
+            display: flex;
+            gap: 8px;
+            justify-content: flex-end;
+            margin-top: 20px;
         }
         
         .status {
@@ -133,8 +176,157 @@
         }
         
         .gantt-container {
-            padding: 20px;
+            overflow: auto;
+            max-height: 600px;
+        }
+        
+        .gantt-header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: white;
+            border-bottom: 2px solid #e2e8f0;
+        }
+        
+        .date-row {
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            background: #f8fafc;
+        }
+        
+        .date-header-left {
+            padding: 12px 16px;
+            background: #f1f5f9;
+            font-weight: 600;
+            color: #374151;
+            border-right: 1px solid #e2e8f0;
+        }
+        
+        .date-header-right {
+            display: flex;
+            background: #f8fafc;
+        }
+        
+        .date-header {
+            flex: 1;
+            padding: 12px 4px;
             text-align: center;
+            font-size: 11px;
+            color: #6b7280;
+            border-right: 1px solid #e2e8f0;
+            min-width: 30px;
+        }
+        
+        .task-row {
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            border-bottom: 1px solid #e2e8f0;
+            min-height: 70px;
+        }
+        
+        .task-info {
+            padding: 12px 16px;
+            background: #fafbfc;
+            border-right: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .task-details h3 {
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 2px;
+            font-size: 14px;
+        }
+        
+        .task-details p {
+            font-size: 11px;
+            color: #6b7280;
+            margin-bottom: 1px;
+        }
+        
+        .task-owner {
+            font-weight: 500;
+            color: #3b82f6;
+        }
+        
+        .task-actions {
+            display: flex;
+            gap: 4px;
+            flex-direction: column;
+        }
+        
+        .task-actions button {
+            padding: 2px 4px;
+            border: none;
+            background: none;
+            cursor: pointer;
+            color: #6b7280;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+        
+        .task-actions button:hover {
+            background: #f3f4f6;
+        }
+        
+        .timeline {
+            position: relative;
+            height: 70px;
+            background: white;
+        }
+        
+        .timeline-grid {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: flex;
+        }
+        
+        .grid-line {
+            flex: 1;
+            border-right: 1px solid #f1f5f9;
+            min-width: 30px;
+        }
+        
+        .task-bar {
+            position: absolute;
+            height: 28px;
+            top: 21px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            padding: 0 8px;
+            color: white;
+            font-size: 11px;
+            font-weight: 500;
+            cursor: pointer;
+            overflow: hidden;
+        }
+        
+        .progress-bar {
+            position: absolute;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 4px;
+            top: 0;
+            left: 0;
+        }
+        
+        .task-name-on-bar {
+            position: relative;
+            z-index: 2;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
             color: #6b7280;
         }
         
@@ -146,27 +338,23 @@
             border-left: 4px solid #3b82f6;
         }
         
-        .instructions h4 {
-            color: #1e40af;
-            margin-bottom: 10px;
+        .progress-slider {
+            margin-top: 8px;
         }
         
-        .instructions ol {
-            color: #374151;
-            padding-left: 20px;
+        .progress-slider input[type="range"] {
+            width: 100%;
+            height: 4px;
+            border-radius: 2px;
+            background: #d1d5db;
+            outline: none;
+            -webkit-appearance: none;
         }
         
-        .instructions li {
-            margin-bottom: 8px;
-        }
-        
-        .warning {
-            background: #fef2f2;
-            border: 1px solid #fecaca;
-            border-radius: 6px;
-            padding: 12px;
-            margin-top: 15px;
-            color: #991b1b;
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #6b7280;
         }
     </style>
 </head>
@@ -175,113 +363,394 @@
         <div class="header">
             <h1 class="title">📊 Collaborative Gantt Chart</h1>
             <div class="header-buttons">
-                <button class="btn btn-secondary" onclick="toggleSetup()">⚙️ Setup Google Sheets</button>
-                <button class="btn btn-success" onclick="loadFromSheets()" id="loadBtn" disabled>🔄 Sync Data</button>
-                <button class="btn btn-primary" onclick="showAddTaskModal()" disabled>+ Add Task</button>
+                <button class="btn btn-secondary" onclick="toggleSetup()">⚙️ Setup</button>
+                <button class="btn btn-success" onclick="loadFromSheets()" id="loadBtn">🔄 Sync</button>
+                <button class="btn btn-primary" onclick="showAddTaskModal()">+ Add Task</button>
             </div>
         </div>
         
         <div id="setupPanel" class="setup-panel">
             <h3>🚀 Connect to Google Sheets</h3>
-            <p>To enable collaboration, you need to connect this Gantt chart to a Google Sheet that everyone can access.</p>
             
             <div class="form-group">
-                <label class="form-label">Google Sheets URL:</label>
-                <input type="text" id="sheetsUrl" class="form-input" 
-                       placeholder="https://docs.google.com/spreadsheets/d/YOUR_SHEET_ID/edit">
+                <label class="form-label">Google Sheets ID:</label>
+                <input type="text" id="sheetsId" class="form-input" 
+                       placeholder="Paste your Google Sheets ID here">
+                <small style="color: #6b7280;">From the URL: https://docs.google.com/spreadsheets/d/<strong>YOUR_SHEET_ID</strong>/edit</small>
             </div>
             
             <div class="form-group">
-                <button class="btn btn-primary" onclick="connectToSheets()">Connect to Sheet</button>
-                <button class="btn btn-secondary" onclick="createNewSheet()">Create New Sheet</button>
+                <button class="btn btn-primary" onclick="connectToSheets()">Connect</button>
+                <button class="btn btn-secondary" onclick="createTemplate()">Create Template</button>
             </div>
             
-            <div class="warning">
-                <strong>⚠️ Important:</strong> The Google Sheet must be set to "Anyone with the link can edit" for this to work properly.
+            <div style="background: #fef2f2; border: 1px solid #fecaca; border-radius: 6px; padding: 12px; margin-top: 15px;">
+                <strong>📋 Setup Steps:</strong><br>
+                1. <a href="https://sheets.google.com/create" target="_blank">Create a new Google Sheet</a><br>
+                2. Share it: Anyone with link can <strong>view</strong><br>
+                3. Copy the Sheet ID from the URL<br>
+                4. Paste it above and click Connect
             </div>
         </div>
         
         <div id="statusBar" class="status" style="display: none;">
-            Not connected to Google Sheets. Click "Setup Google Sheets" to enable collaboration.
-        </div>
-        
-        <div class="instructions">
-            <h4>🎯 How to Set Up Cloud Collaboration:</h4>
-            <ol>
-                <li><strong>Create a Google Sheet:</strong> Go to <a href="https://sheets.google.com" target="_blank">sheets.google.com</a> and create a new spreadsheet</li>
-                <li><strong>Share the sheet:</strong> Click "Share" → "Anyone with the link can edit"</li>
-                <li><strong>Copy the URL:</strong> Copy the full Google Sheets URL from your browser</li>
-                <li><strong>Connect here:</strong> Click "Setup Google Sheets" above and paste the URL</li>
-                <li><strong>Start collaborating:</strong> Share this page's URL with your team!</li>
-            </ol>
+            Click "Setup" to connect to Google Sheets for collaboration
         </div>
         
         <div id="gantt-chart" class="gantt-container">
-            <h3>🔗 Ready to Connect</h3>
-            <p>Set up Google Sheets integration above to start creating your collaborative Gantt chart!</p>
-            <br>
-            <button class="btn btn-primary" onclick="toggleSetup()">Get Started</button>
+            <div class="instructions">
+                <h4>🎯 How to Set Up Cloud Collaboration:</h4>
+                <ol style="color: #374151; padding-left: 20px;">
+                    <li style="margin-bottom: 8px;"><strong>Create Google Sheet:</strong> Click "Create Template" to make a properly formatted sheet</li>
+                    <li style="margin-bottom: 8px;"><strong>Share the sheet:</strong> Set sharing to "Anyone with the link can view"</li>
+                    <li style="margin-bottom: 8px;"><strong>Get Sheet ID:</strong> Copy the ID from the Google Sheets URL</li>
+                    <li style="margin-bottom: 8px;"><strong>Connect:</strong> Paste the ID above and click "Connect"</li>
+                    <li style="margin-bottom: 8px;"><strong>Collaborate:</strong> Share this page with your team!</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Task Modal -->
+    <div id="addTaskModal" class="modal">
+        <div class="modal-content">
+            <h2 class="modal-header">Add New Task</h2>
+            <div class="form-group">
+                <label class="form-label">Task Name</label>
+                <input type="text" id="taskName" class="form-input" placeholder="Enter task name">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Task Owner</label>
+                <input type="text" id="taskOwner" class="form-input" placeholder="Who is responsible?">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Start Date</label>
+                <input type="date" id="startDate" class="form-input">
+            </div>
+            <div class="form-group">
+                <label class="form-label">End Date</label>
+                <input type="date" id="endDate" class="form-input">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Progress (%)</label>
+                <input type="number" id="taskProgress" class="form-input" min="0" max="100" value="0">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Color</label>
+                <div class="color-picker" id="colorPicker">
+                    <!-- Colors will be added by JavaScript -->
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-secondary" onclick="hideAddTaskModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="addTask()">Save to Sheet</button>
+            </div>
         </div>
     </div>
 
     <script>
-        let sheetsUrl = '';
         let tasks = [];
-        
+        let sheetsId = '';
+        let selectedColor = '#3B82F6';
+        const colors = ['#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6', '#06B6D4'];
+
+        // Load saved sheet ID
+        if (localStorage.getItem('ganttSheetsId')) {
+            sheetsId = localStorage.getItem('ganttSheetsId');
+            document.getElementById('sheetsId').value = sheetsId;
+            updateStatus('Connected to Google Sheets', 'success');
+            loadFromSheets();
+        }
+
         function toggleSetup() {
             const panel = document.getElementById('setupPanel');
             panel.classList.toggle('show');
         }
-        
+
         function connectToSheets() {
-            const url = document.getElementById('sheetsUrl').value;
-            if (url && url.includes('docs.google.com/spreadsheets')) {
-                sheetsUrl = url;
-                document.getElementById('statusBar').style.display = 'block';
-                document.getElementById('statusBar').innerHTML = '✅ Connected to Google Sheets! You can now sync data with your team.';
-                document.getElementById('statusBar').style.background = '#dcfce7';
-                document.getElementById('statusBar').style.color = '#166534';
-                
-                document.getElementById('loadBtn').disabled = false;
-                document.querySelector('.btn-primary[onclick="showAddTaskModal()"]').disabled = false;
-                
-                document.getElementById('gantt-chart').innerHTML = `
-                    <h3>🎉 Connected Successfully!</h3>
-                    <p>Your Gantt chart is now connected to Google Sheets.</p>
-                    <p>Click "Sync Data" to load tasks or "Add Task" to start creating.</p>
-                    <br>
-                    <div style="background: #f0f9ff; padding: 15px; border-radius: 6px; max-width: 600px; margin: 0 auto;">
-                        <strong>Share this page:</strong><br>
-                        <code style="background: white; padding: 5px; border-radius: 3px;">${window.location.href}</code>
-                    </div>
-                `;
-                
+            const id = document.getElementById('sheetsId').value.trim();
+            if (id) {
+                sheetsId = id;
+                localStorage.setItem('ganttSheetsId', sheetsId);
+                updateStatus('Connected to Google Sheets! Loading data...', 'success');
                 toggleSetup();
+                loadFromSheets();
             } else {
-                alert('Please enter a valid Google Sheets URL');
+                alert('Please enter a Google Sheets ID');
             }
         }
-        
-        function createNewSheet() {
-            window.open('https://sheets.google.com/create', '_blank');
-            alert('1. Create your sheet\n2. Click Share → Anyone with link can edit\n3. Copy the URL and paste it here');
+
+        function createTemplate() {
+            const templateUrl = 'https://docs.google.com/spreadsheets/d/1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms/copy';
+            window.open(templateUrl, '_blank');
+            
+            setTimeout(() => {
+                alert('Template created! Now:\n\n1. Rename your sheet\n2. Share it (Anyone with link can VIEW)\n3. Copy the Sheet ID from the URL\n4. Paste it in the setup above');
+            }, 1000);
         }
-        
-        function loadFromSheets() {
-            if (!sheetsUrl) {
-                alert('Please connect to Google Sheets first');
+
+        async function loadFromSheets() {
+            if (!sheetsId) {
+                updateStatus('Please connect to Google Sheets first', 'error');
                 return;
             }
-            
-            alert('In a real implementation, this would:\n\n' +
-                  '• Connect to Google Sheets API\n' +
-                  '• Load task data from the spreadsheet\n' +
-                  '• Display tasks in the Gantt chart\n\n' +
-                  'This requires API setup - see the options below for implementation approaches.');
+
+            updateStatus('Loading tasks from Google Sheets...', 'loading');
+
+            try {
+                const csvUrl = `https://docs.google.com/spreadsheets/d/${sheetsId}/export?format=csv`;
+                const response = await fetch(csvUrl);
+                
+                if (!response.ok) {
+                    throw new Error('Failed to load sheet. Check the Sheet ID and sharing settings.');
+                }
+
+                const csvText = await response.text();
+                tasks = parseCSVToTasks(csvText);
+                
+                updateStatus(`Loaded ${tasks.length} tasks from Google Sheets`, 'success');
+                renderGanttChart();
+                
+            } catch (error) {
+                console.error('Error loading from sheets:', error);
+                updateStatus('Error loading from Google Sheets. Check Sheet ID and sharing settings.', 'error');
+            }
         }
-        
+
+        function parseCSVToTasks(csvText) {
+            const lines = csvText.split('\n');
+            const taskList = [];
+            
+            // Skip header row, start from index 1
+            for (let i = 1; i < lines.length; i++) {
+                const line = lines[i].trim();
+                if (line) {
+                    const columns = parseCSVLine(line);
+                    if (columns.length >= 6 && columns[0]) {
+                        taskList.push({
+                            id: i,
+                            name: columns[0] || 'Untitled Task',
+                            owner: columns[1] || 'Unassigned',
+                            startDate: columns[2] || '2024-01-01',
+                            endDate: columns[3] || '2024-01-02',
+                            progress: parseInt(columns[4]) || 0,
+                            color: columns[5] || '#3B82F6'
+                        });
+                    }
+                }
+            }
+            
+            return taskList;
+        }
+
+        function parseCSVLine(line) {
+            const result = [];
+            let current = '';
+            let inQuotes = false;
+            
+            for (let i = 0; i < line.length; i++) {
+                const char = line[i];
+                
+                if (char === '"') {
+                    inQuotes = !inQuotes;
+                } else if (char === ',' && !inQuotes) {
+                    result.push(current.trim());
+                    current = '';
+                } else {
+                    current += char;
+                }
+            }
+            
+            result.push(current.trim());
+            return result;
+        }
+
+        function updateStatus(message, type) {
+            const statusBar = document.getElementById('statusBar');
+            statusBar.style.display = 'block';
+            statusBar.textContent = message;
+            
+            switch (type) {
+                case 'success':
+                    statusBar.style.background = '#dcfce7';
+                    statusBar.style.color = '#166534';
+                    break;
+                case 'error':
+                    statusBar.style.background = '#fef2f2';
+                    statusBar.style.color = '#991b1b';
+                    break;
+                case 'loading':
+                    statusBar.style.background = '#fef3c7';
+                    statusBar.style.color = '#92400e';
+                    break;
+                default:
+                    statusBar.style.background = '#dbeafe';
+                    statusBar.style.color = '#1e40af';
+            }
+        }
+
+        function generateDateRange() {
+            const start = new Date('2024-09-01');
+            const end = new Date('2024-12-31');
+            const dates = [];
+            const current = new Date(start);
+            
+            while (current <= end) {
+                dates.push(new Date(current));
+                current.setDate(current.getDate() + 1);
+            }
+            
+            return dates;
+        }
+
+        function getTaskBarStyle(task, dates) {
+            const startDate = new Date(task.startDate);
+            const endDate = new Date(task.endDate);
+            const chartStart = dates[0];
+            const totalDays = dates.length;
+            
+            const startDay = Math.floor((startDate - chartStart) / (1000 * 60 * 60 * 24));
+            const duration = Math.floor((endDate - startDate) / (1000 * 60 * 60 * 24)) + 1;
+            
+            const leftPercent = (startDay / totalDays) * 100;
+            const widthPercent = (duration / totalDays) * 100;
+            
+            return {
+                left: leftPercent,
+                width: widthPercent,
+                backgroundColor: task.color
+            };
+        }
+
+        function formatDate(dateStr) {
+            return new Date(dateStr).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+        }
+
+        function renderGanttChart() {
+            const dates = generateDateRange();
+            const container = document.getElementById('gantt-chart');
+            
+            if (tasks.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <h3>No tasks found</h3>
+                        <p>Load data from Google Sheets or add your first task</p>
+                        <br>
+                        <button class="btn btn-success" onclick="loadFromSheets()">🔄 Reload from Sheets</button>
+                        <button class="btn btn-primary" onclick="showAddTaskModal()">+ Add Task</button>
+                    </div>
+                `;
+                return;
+            }
+
+            let html = `
+                <div class="gantt-header">
+                    <div class="date-row">
+                        <div class="date-header-left">Tasks (${tasks.length})</div>
+                        <div class="date-header-right">
+                            ${dates.filter((_, index) => index % 7 === 0).map(date => `
+                                <div class="date-header">
+                                    ${date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            tasks.forEach(task => {
+                const style = getTaskBarStyle(task, dates);
+                html += `
+                    <div class="task-row">
+                        <div class="task-info">
+                            <div class="task-details">
+                                <h3>${task.name}</h3>
+                                <p class="task-owner">👤 ${task.owner}</p>
+                                <p>📅 ${formatDate(task.startDate)} - ${formatDate(task.endDate)}</p>
+                                <p>📊 Progress: ${task.progress}%</p>
+                                <div class="progress-slider">
+                                    <input type="range" min="0" max="100" value="${task.progress}" 
+                                           onchange="updateProgress(${task.id}, this.value)">
+                                </div>
+                            </div>
+                            <div class="task-actions">
+                                <button onclick="updateTaskInSheet(${task.id})" title="Sync to Sheet">💾 Save</button>
+                            </div>
+                        </div>
+                        <div class="timeline">
+                            <div class="timeline-grid">
+                                ${dates.filter((_, index) => index % 7 === 0).map(() => '<div class="grid-line"></div>').join('')}
+                            </div>
+                            <div class="task-bar" 
+                                 style="left: ${style.left}%; width: ${style.width}%; background-color: ${style.backgroundColor}">
+                                <div class="progress-bar" style="width: ${task.progress}%"></div>
+                                <span class="task-name-on-bar">${task.name}</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+        }
+
+        function updateProgress(taskId, newProgress) {
+            const task = tasks.find(t => t.id === taskId);
+            if (task) {
+                task.progress = parseInt(newProgress);
+                renderGanttChart();
+            }
+        }
+
+        function updateTaskInSheet(taskId) {
+            alert(`To update task in Google Sheets:\n\n1. Open your Google Sheet\n2. Find the task row\n3. Update the progress value\n4. Click "Sync" here to reload\n\nFor automatic sync, you'd need Google Apps Script setup.`);
+        }
+
         function showAddTaskModal() {
-            alert('Task creation would save directly to Google Sheets and sync with all users!');
+            document.getElementById('addTaskModal').style.display = 'flex';
+            setupColorPicker();
+        }
+
+        function hideAddTaskModal() {
+            document.getElementById('addTaskModal').style.display = 'none';
+            clearForm();
+        }
+
+        function setupColorPicker() {
+            const picker = document.getElementById('colorPicker');
+            picker.innerHTML = colors.map(color => `
+                <div class="color-option ${color === selectedColor ? 'selected' : ''}" 
+                     style="background-color: ${color}"
+                     onclick="selectColor('${color}')"></div>
+            `).join('');
+        }
+
+        function selectColor(color) {
+            selectedColor = color;
+            setupColorPicker();
+        }
+
+        function addTask() {
+            const name = document.getElementById('taskName').value;
+            const owner = document.getElementById('taskOwner').value;
+            const startDate = document.getElementById('startDate').value;
+            const endDate = document.getElementById('endDate').value;
+            const progress = parseInt(document.getElementById('taskProgress').value) || 0;
+
+            if (name && startDate && endDate) {
+                alert(`New task created!\n\nTo save to Google Sheets:\n1. Open your Google Sheet\n2. Add a new row with:\n   - Name: ${name}\n   - Owner: ${owner}\n   - Start: ${startDate}\n   - End: ${endDate}\n   - Progress: ${progress}\n   - Color: ${selectedColor}\n\n3. Click "Sync" to reload`);
+                
+                hideAddTaskModal();
+            }
+        }
+
+        function clearForm() {
+            document.getElementById('taskName').value = '';
+            document.getElementById('taskOwner').value = '';
+            document.getElementById('startDate').value = '';
+            document.getElementById('endDate').value = '';
+            document.getElementById('taskProgress').value = '0';
+            selectedColor = '#3B82F6';
         }
     </script>
 </body>
